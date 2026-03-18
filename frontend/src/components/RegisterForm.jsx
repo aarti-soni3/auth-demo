@@ -1,12 +1,14 @@
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import {
+  Stack,
+  TextField,
+  FormControl,
+  Typography,
+  Paper,
+  InputLabel,
+  MenuItem,
+  Select,
+  Button,
+} from "@mui/material";
 import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context provider/createContext";
@@ -51,7 +53,6 @@ export default function RegisterForm() {
           padding: "40px 20px",
           margin: "0 auto",
           borderRadius: "10px",
-
         }}
       >
         <Typography variant="h4" gutterBottom>

@@ -1,6 +1,6 @@
 const UserSchema = require('../models/userSchema');
 const bcrypt = require('bcrypt');
-const { signAccessToken, signRefreshToken } = require('../utils/jwtHelper');
+const { signAccessToken } = require('../utils/jwtHelper');
 const { setTokenCookie, removeTokenCookie } = require('../utils/cookieHelper');
 
 module.exports.createUser = async (req, res) => {
@@ -25,7 +25,7 @@ module.exports.createUser = async (req, res) => {
 
         return res.status(201).json({ type: 'success', message: 'Login Successful', user: userData })
     } catch (error) {
-        return res.status(500).send(` msg : ${error.message}`)
+        return res.status(500).json({ type: 'error', message: error.message })
     }
 }
 
@@ -44,7 +44,6 @@ module.exports.loginUser = async (req, res) => {
 
         if (isMatch) {
             const accessToken = signAccessToken(user)
-            const refreshToken = signRefreshToken(user)
             setTokenCookie(res, accessToken);
 
             const userData = {
