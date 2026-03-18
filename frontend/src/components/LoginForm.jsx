@@ -3,10 +3,13 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import { useContext } from "react";
 import { useState } from "react";
+import { AuthContext } from "../context provider/createContext";
 
 export default function LoginForm() {
+  const { handleLogin } = useContext(AuthContext);
+
   const initialData = {
     username: "",
     password: "",
@@ -28,21 +31,7 @@ export default function LoginForm() {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/login",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      console.log(response.data);
-    } catch (error) {
-      throw Error(error);
-    }
+    handleLogin(formData);
   };
 
   return (
@@ -54,6 +43,7 @@ export default function LoginForm() {
           width: "30%",
           padding: "40px 20px",
           margin: "0 auto",
+          borderRadius: "10px",
         }}
       >
         <Typography variant="h4" gutterBottom>
@@ -73,6 +63,7 @@ export default function LoginForm() {
               name="username"
               value={formData.username}
               onChange={handleOnChange}
+              required
             />
 
             <TextField
@@ -83,6 +74,7 @@ export default function LoginForm() {
               name="password"
               value={formData.password}
               onChange={handleOnChange}
+              required
             />
             <Button type="submit" variant="contained">
               Login

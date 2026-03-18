@@ -1,21 +1,24 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import axios from "axios";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context provider/createContext";
 
 export default function RegisterForm() {
+  const { handleCreateUser } = useContext(AuthContext);
+
   const initialData = {
     firstname: "",
     lastname: "",
     username: "",
+    role: "user",
     email: "",
     password: "",
   };
@@ -23,20 +26,7 @@ export default function RegisterForm() {
   const [formData, SetFormData] = useState(initialData);
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      console.log(response.data);
-    } catch (error) {
-      throw Error(error)
-    }
+    handleCreateUser(formData);
   };
 
   const handleOnChange = (e) => {
@@ -60,6 +50,8 @@ export default function RegisterForm() {
           width: "30%",
           padding: "40px 20px",
           margin: "0 auto",
+          borderRadius: "10px",
+          
         }}
       >
         <Typography variant="h4" gutterBottom>
@@ -97,6 +89,7 @@ export default function RegisterForm() {
 
             <FormControl>
               <TextField
+                type="email"
                 id="filled-basic"
                 label="Email"
                 variant="standard"
@@ -128,6 +121,24 @@ export default function RegisterForm() {
                 onChange={handleOnChange}
               />
             </FormControl>
+
+            <FormControl style={{ width: "240px", marginTop: "30px" }}>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                // variant="standard"
+                labelId="role-label"
+                id="role"
+                label="Role"
+                name="role"
+                value={formData.role}
+                onChange={handleOnChange}
+              >
+                <MenuItem value={"user"}>User</MenuItem>
+                <MenuItem value={"manager"}>Manager</MenuItem>
+                <MenuItem value={"admin"}>Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <br />
 
             <Button type="submit" variant="contained">
               Register

@@ -4,25 +4,31 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     firstname: {
         type: String,
-        required: [true, 'first name is required']
+        required: [true, 'First name is required']
     },
     lastname: {
         type: String,
-        required: [true, 'last name is required']
+        required: [true, 'Last name is required']
     },
     email: {
         type: String,
-        required: [true, 'email is required']
+        unique: [true, 'Email must be unique'],
+        required: [true, 'Email is required']
+    },
+    role: {
+        type: String,
+        enum: ['admin', 'manager', 'user'],
+        required: [true, 'Role is required']
     },
     username: {
         type: String,
-        required: [true, 'username is required']
+        unique: [true, 'Username must be unique'],
+        required: [true, 'Username is required']
     },
     password: {
         type: String,
-        required: [true, 'password is required']
+        required: [true, 'Password is required']
     },
-
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('User', UserSchema)

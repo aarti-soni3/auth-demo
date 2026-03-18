@@ -1,23 +1,16 @@
 const express = require('express')
 const router = express.Router();
-const UserSchema = require('../models/userSchema');
+const middlewareFunction = require('../utils/middlewareFunctions');
+const userController = require('../controller/userController');
 
-router.route('/').get((req, res) => {
-    res.send('');
-})
 
-router.route('/register').post((req, res) => {
+router.route('/user')
+    .get(middlewareFunction.isAuthenticate, middlewareFunction.isRoleAllowed('admin', 'manager', 'user'), userController.getUser)
 
-    const user = new UserSchema(req.body);
-    console.log(user)
+router.route('/manager')
+    .get(middlewareFunction.isAuthenticate, middlewareFunction.isRoleAllowed('admin', 'manager'), userController.getManager)
 
-    res.send('registered')
-})
-
-router.route('/login').post((req, res) => {
-    console.log(req.body);
-
-    res.send('login successfully')
-})
+router.route('/admin')
+    .get(middlewareFunction.isAuthenticate, middlewareFunction.isRoleAllowed('admin'), userController.getAdmin)
 
 module.exports = router
