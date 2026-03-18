@@ -51,7 +51,7 @@ export default function RegisterForm() {
           padding: "40px 20px",
           margin: "0 auto",
           borderRadius: "10px",
-          
+
         }}
       >
         <Typography variant="h4" gutterBottom>
@@ -73,6 +73,7 @@ export default function RegisterForm() {
                 name="firstname"
                 value={formData.firstname}
                 onChange={handleOnChange}
+                required
               />
             </FormControl>
 
@@ -84,6 +85,7 @@ export default function RegisterForm() {
                 name="lastname"
                 value={formData.lastname}
                 onChange={handleOnChange}
+                required
               />
             </FormControl>
 
@@ -96,6 +98,7 @@ export default function RegisterForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleOnChange}
+                required
               />
             </FormControl>
 
@@ -107,6 +110,7 @@ export default function RegisterForm() {
                 name="username"
                 value={formData.username}
                 onChange={handleOnChange}
+                required
               />
             </FormControl>
 
@@ -119,6 +123,7 @@ export default function RegisterForm() {
                 name="password"
                 value={formData.password}
                 onChange={handleOnChange}
+                required
               />
             </FormControl>
 
@@ -132,6 +137,7 @@ export default function RegisterForm() {
                 name="role"
                 value={formData.role}
                 onChange={handleOnChange}
+                required
               >
                 <MenuItem value={"user"}>User</MenuItem>
                 <MenuItem value={"manager"}>Manager</MenuItem>
