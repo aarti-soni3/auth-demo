@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext, FeedbackContext } from "./createContext";
 import { useContext } from "react";
+import { apiInstance } from "../utils/apiInstance";
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -16,12 +16,9 @@ export default function AuthProvider({ children }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "http://localhost:3000/api/users/user",
-          {
-            withCredentials: true,
-          },
-        );
+        const response = await apiInstance.get("/api/users/user", {
+          withCredentials: true,
+        });
 
         const user = response?.data?.user;
         if (user) {
@@ -42,11 +39,7 @@ export default function AuthProvider({ children }) {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:3000/api/auth/logout",
-        {},
-        { withCredentials: true },
-      );
+      await apiInstance.post("/api/auth/logout", {}, { withCredentials: true });
 
       setUser(null);
       navigate("/login");
@@ -59,16 +52,12 @@ export default function AuthProvider({ children }) {
 
   const handleLogin = async (formData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await apiInstance.post("/api/auth/login", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
 
       const user = response?.data?.user;
       if (user) {
@@ -86,16 +75,12 @@ export default function AuthProvider({ children }) {
 
   const handleCreateUser = async (formData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await apiInstance.post("/api/auth/register", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
 
       const user = response?.data?.user;
       if (user) {
