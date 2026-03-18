@@ -40,37 +40,6 @@ export default function AuthProvider({ children }) {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchRoleData = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       let endpoint = "/api/users/user";
-  //       if (user) {
-  //         if (user.role === "manager") endpoint = "/api/users/manager";
-  //         else if (user.role === "admin") endpoint = "/api/users/admin";
-  //       }
-
-  //       const response = await axios.get(`http://localhost:3000${endpoint}`, {
-  //         withCredentials: true,
-  //       });
-
-  //       const userData = response?.data?.user;
-  //       if (userData) {
-  //         setUserData(userData);
-  //         navigate("/dashboard");
-  //       } else if (response.statusCode === 401) {
-  //         navigate("/login");
-  //       }
-  //     } catch (error) {
-  //       console.log(error.response.data, error.response.status);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   if (user) fetchRoleData();
-  // }, [user]);
-
   const handleLogout = async () => {
     try {
       await axios.post(
