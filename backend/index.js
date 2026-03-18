@@ -21,11 +21,16 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser())
 
-// app.use((req, res, next) => {
-//     console.log(req.user)
-//     res.locals.currentUser = req.user;
-//     next();
-// })
+// API Routes
+// http://localhost:3000/
+// /api/users
+// 	/api/users/user
+// 	/api/users/manager
+// 	/api/users/admin
+
+// /api/register
+// /api/login
+// /api/logout
 
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
