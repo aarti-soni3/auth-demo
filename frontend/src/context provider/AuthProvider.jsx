@@ -2,46 +2,15 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { AuthContext } from "./createContext";
+import { AuthContext, FeedbackContext } from "./createContext";
+import { useContext } from "react";
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const initializeUser = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       let response = await axios.get("http://localhost:3000/api/users/user", {
-  //         withCredentials: true,
-  //       });
-
-  //       const basicUser = response.data.user;
-
-  //       if (basicUser) {
-  //         let endpoint = "/api/users/user";
-  //         if (basicUser.role === "manager") endpoint = "/api/users/manager";
-  //         if (basicUser.role === "admin") endpoint = "/api/users/admin";
-
-  //         response = await axios.get(`http://localhost:3000${endpoint}`, {
-  //           withCredentials: true,
-  //         });
-
-  //         setUser(response.data.user);
-  //         navigate("/dashboard");
-  //       }
-  //     } catch (error) {
-  //       console.error("Auth initialization failed", error.response?.status);
-  //       setUser(null);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   initializeUser();
-  // }, []);
+  const { showSuccessMessage, showErrorMessage } = useContext(FeedbackContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,8 +81,10 @@ export default function AuthProvider({ children }) {
 
       setUser(null);
       navigate("/login");
+      showSuccessMessage("you logged out successfully!");
     } catch (error) {
       console.log(error.response?.data);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -131,15 +102,16 @@ export default function AuthProvider({ children }) {
       );
 
       const user = response?.data?.user;
-      console.log(user)
       if (user) {
         setUser(user);
+        showSuccessMessage("you logged in successfully!");
         navigate("/dashboard");
       } else {
         navigate("/login");
       }
     } catch (error) {
       console.log(error.response?.data);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -160,9 +132,11 @@ export default function AuthProvider({ children }) {
       if (user) {
         setUser(user);
         navigate("/dashboard");
+        showSuccessMessage("account created successfully!");
       }
     } catch (error) {
       console.log("data", error.response?.data);
+      showErrorMessage(error?.response?.data?.message);
     }
   };
 
