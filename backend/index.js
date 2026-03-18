@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const cors = require('cors');
-const connectMongo = require('./mongooseConnect')
+const connectMongo = require('./config/mongooseConnect')
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
 const cookieParser = require('cookie-parser');
