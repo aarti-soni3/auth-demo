@@ -1,10 +1,4 @@
-import {
-  Button,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../context provider/createContext";
@@ -66,6 +60,7 @@ export default function LoginForm() {
               value={formData.username}
               onChange={handleOnChange}
               required
+              autoFocus
             />
 
             <TextField

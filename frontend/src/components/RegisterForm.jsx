@@ -75,6 +75,7 @@ export default function RegisterForm() {
                 value={formData.firstname}
                 onChange={handleOnChange}
                 required
+                autoFocus
               />
             </FormControl>
 

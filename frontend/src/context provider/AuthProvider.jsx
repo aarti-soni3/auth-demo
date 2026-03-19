@@ -16,9 +16,7 @@ export default function AuthProvider({ children }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiInstance.get("/api/users/user", {
-          withCredentials: true,
-        });
+        const response = await apiInstance.get("/api/users/user");
 
         const user = response?.data?.user;
         if (user) {
@@ -39,7 +37,7 @@ export default function AuthProvider({ children }) {
 
   const handleLogout = async () => {
     try {
-      await apiInstance.post("/api/auth/logout", {}, { withCredentials: true });
+      await apiInstance.post("/api/auth/logout", {});
 
       setUser(null);
       navigate("/login");
@@ -52,12 +50,7 @@ export default function AuthProvider({ children }) {
 
   const handleLogin = async (formData) => {
     try {
-      const response = await apiInstance.post("/api/auth/login", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiInstance.post("/api/auth/login", formData);
 
       const user = response?.data?.user;
       if (user) {
@@ -75,12 +68,7 @@ export default function AuthProvider({ children }) {
 
   const handleCreateUser = async (formData) => {
     try {
-      const response = await apiInstance.post("/api/auth/register", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiInstance.post("/api/auth/register", formData);
 
       const user = response?.data?.user;
       if (user) {
