@@ -2,18 +2,16 @@ const jwt = require('jsonwebtoken');
 const userSchema = require('../models/userSchema');
 
 module.exports.isAuthenticate = async (req, res, next) => {
-    const token = req.cookies?.token;
-    console.log(token)
+    const accessToken = req.headers.authorization && req.headers.authorization.split(" ")[1];
     try {
-        if (!token)
+        if (!accessToken)
             return res.status(401).json({ type: 'error', message: 'Unauthorised' })
 
-        const user = await jwt.verify(token, process.env.ACCESS_TOKEN);
+        const user = await jwt.verify(accessToken, process.env.ACCESS_TOKEN);
         req.user = user;
 
         next()
     } catch (error) {
-        res.clearCookie('token');
         return res.status(403).json({ type: 'error', message: 'Fake or Expired Credentials' })
     }
 }

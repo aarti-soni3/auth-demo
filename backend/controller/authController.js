@@ -1,7 +1,6 @@
 const UserSchema = require('../models/userSchema');
 const bcrypt = require('bcrypt');
-const { signAccessToken } = require('../utils/jwtHelper');
-const { setTokenCookie, removeTokenCookie } = require('../utils/cookieHelper');
+const { signAccessToken, signRefreshToken } = require('../utils/jwtHelper');
 
 module.exports.createUser = async (req, res) => {
     try {
@@ -12,7 +11,7 @@ module.exports.createUser = async (req, res) => {
         await user.save();
 
         const accessToken = signAccessToken(user)
-        setTokenCookie(res, accessToken);
+        const refreshToken = signRefreshToken(user)
 
         const userData = {
             id: user._id,
@@ -23,7 +22,13 @@ module.exports.createUser = async (req, res) => {
             email: user.email,
         };
 
-        return res.status(201).json({ type: 'success', message: 'Login Successful', user: userData })
+        return res.status(201).json({
+            type: 'success',
+            message: 'Login Successful',
+            user: userData,
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        })
     } catch (error) {
         return res.status(500).json({ type: 'error', message: error.message })
     }
@@ -44,7 +49,7 @@ module.exports.loginUser = async (req, res) => {
 
         if (isMatch) {
             const accessToken = signAccessToken(user)
-            setTokenCookie(res, accessToken);
+            const refreshToken = signRefreshToken(user)
 
             const userData = {
                 id: user._id,
@@ -55,7 +60,13 @@ module.exports.loginUser = async (req, res) => {
                 email: user.email,
             };
 
-            return res.status(200).json({ type: 'success', message: 'Login Successful', user: userData })
+            return res.status(200).json({
+                type: 'success',
+                message: 'Login Successful',
+                user: userData,
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            })
         }
         else {
             return res.status(403).json({ type: 'error', message: 'Invalid creadentials' })
@@ -66,6 +77,6 @@ module.exports.loginUser = async (req, res) => {
 }
 
 module.exports.logoutUser = (req, res) => {
-    removeTokenCookie(res);
+    // removeTokenCookie(res);
     res.status(200).json({ type: 'success', message: 'Logged out successfully!' })
 }

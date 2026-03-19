@@ -3,12 +3,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext, FeedbackContext } from "./createContext";
 import { useContext } from "react";
-import { apiInstance } from "../utils/apiInstance";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { useAxiosInstance } from "../hooks/useAxiosInstance";
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const axiosInstance = useAxiosInstance();
+  const [, setToken] = useLocalStorage(import.meta.env.VITE_TOKEN_KEY, null);
 
   const { showSuccessMessage, showErrorMessage } = useContext(FeedbackContext);
 
@@ -16,8 +19,8 @@ export default function AuthProvider({ children }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiInstance.get("/api/users/user");
-
+        const response = await axiosInstance.get("/api/users/user");
+        
         const user = response?.data?.user;
         if (user) {
           setUser(user);
@@ -37,9 +40,9 @@ export default function AuthProvider({ children }) {
 
   const handleLogout = async () => {
     try {
-      await apiInstance.post("/api/auth/logout", {});
-
+      await axiosInstance.post("/api/auth/logout", {});
       setUser(null);
+      setToken(null);
       navigate("/login");
       showSuccessMessage("you logged out successfully!");
     } catch (error) {
@@ -51,10 +54,14 @@ export default function AuthProvider({ children }) {
 
   const handleLogin = async (formData) => {
     try {
-      const response = await apiInstance.post("/api/auth/login", formData);
+      const response = await axiosInstance.post("/api/auth/login", formData);
 
-      const user = response?.data?.user;
+      const user = response?.data?.user,
+        accessToken = response?.data?.accessToken;
+
       if (user) {
+        if (accessToken) setToken(accessToken);
+
         setUser(user);
         showSuccessMessage("you logged in successfully!");
         navigate("/dashboard");
@@ -70,10 +77,13 @@ export default function AuthProvider({ children }) {
 
   const handleCreateUser = async (formData) => {
     try {
-      const response = await apiInstance.post("/api/auth/register", formData);
+      const response = await axiosInstance.post("/api/auth/register", formData);
 
-      const user = response?.data?.user;
+      const user = response?.data?.user,
+        accessToken = response?.data?.accessToken;
+
       if (user) {
+        if (accessToken) setToken(accessToken);
         setUser(user);
         navigate("/dashboard");
         showSuccessMessage("account created successfully!");
