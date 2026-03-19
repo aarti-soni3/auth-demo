@@ -44,7 +44,8 @@ export default function AuthProvider({ children }) {
       showSuccessMessage("you logged out successfully!");
     } catch (error) {
       console.log(error.response?.data);
-      showErrorMessage(error?.response?.data?.message);
+      // showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.customMessage);
     }
   };
 
@@ -62,7 +63,8 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       console.log(error.response?.data);
-      showErrorMessage(error?.response?.data?.message);
+      // showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.customMessage);
     }
   };
 
@@ -78,7 +80,8 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       console.log("data", error.response?.data);
-      showErrorMessage(error?.response?.data?.message);
+      // showErrorMessage(error?.response?.data?.message);
+      showErrorMessage(error?.customMessage);
     }
   };
 
