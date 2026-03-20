@@ -56,24 +56,23 @@ axiosInstance.interceptors.response.use((response) => {
         }
     }
 
-    if (error.response) {
-        switch (error.response.status) {
-            case 401:
-                error.customMessage = "Please log in with valid credentials!";
-                break;
-            case 403:
-                error.customMessage = "Invalid credentials!";
-                break;
-            case 404:
-                error.customMessage = "The requested data was not found!";
-                break;
-            default:
-                error.customMessage = "Oops! An internal server error occurred";
-
-        }
-    } else {
-        error.customMessage = 'Network error! Please check your connection.'
-    }
+    // if (error.response) {
+    //     switch (error.response.status) {
+    //         case 401:
+    //             error.customMessage = "Please log in with valid credentials!";
+    //             break;
+    //         case 403:
+    //             error.customMessage = "Invalid credentials!";
+    //             break;
+    //         case 404:
+    //             error.customMessage = "The requested data was not found!";
+    //             break;
+    //         default:
+    //             error.customMessage = "Oops! An internal server error occurred";
+    //     }
+    // } else {
+    //     error.customMessage = 'Network error! Please check your connection.'
+    // }
 
     return Promise.reject(error);
 })
