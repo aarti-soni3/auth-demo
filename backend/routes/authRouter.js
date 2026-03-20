@@ -8,4 +8,6 @@ router.route('/login').post(authController.loginUser)
 
 router.route('/logout').post(authController.logoutUser);
 
+router.route('/refresh').post(authController.refreshTokens);
+
 module.exports = router

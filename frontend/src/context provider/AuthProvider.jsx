@@ -4,14 +4,13 @@ import { useNavigate } from "react-router";
 import { AuthContext, FeedbackContext } from "./createContext";
 import { useContext } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { useAxiosInstance } from "../hooks/useAxiosInstance";
+import axiosInstance from "../hooks/axiosInstance";
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const axiosInstance = useAxiosInstance();
-  const [, setToken] = useLocalStorage(import.meta.env.VITE_TOKEN_KEY, null);
+  const { setLocalStorageValue } = useLocalStorage();
 
   const { showSuccessMessage, showErrorMessage } = useContext(FeedbackContext);
 
@@ -20,15 +19,16 @@ export default function AuthProvider({ children }) {
       try {
         setLoading(true);
         const response = await axiosInstance.get("/api/users/user");
-        
+
         const user = response?.data?.user;
         if (user) {
           setUser(user);
           navigate("/dashboard");
-        } else if (response.statusCode === 401) {
-          navigate("/login");
         }
+        //  else if (response.statusCode === 401) {
+        // }
       } catch (error) {
+        navigate("/login");
         console.log(error.response.data, error.response.status);
       } finally {
         setLoading(false);
@@ -42,7 +42,8 @@ export default function AuthProvider({ children }) {
     try {
       await axiosInstance.post("/api/auth/logout", {});
       setUser(null);
-      setToken(null);
+      setLocalStorageValue(import.meta.env.VITE_ACCESSTOKEN_KEY, null);
+      setLocalStorageValue(import.meta.env.VITE_REFRESHTOKEN_KEY, null);
       navigate("/login");
       showSuccessMessage("you logged out successfully!");
     } catch (error) {
@@ -57,10 +58,21 @@ export default function AuthProvider({ children }) {
       const response = await axiosInstance.post("/api/auth/login", formData);
 
       const user = response?.data?.user,
-        accessToken = response?.data?.accessToken;
+        newAccessToken = response?.data?.accessToken,
+        newRefreshToken = response?.data?.refreshToken;
 
+      console.log("from login :  ", newAccessToken, newRefreshToken);
       if (user) {
-        if (accessToken) setToken(accessToken);
+        if (newAccessToken)
+          setLocalStorageValue(
+            import.meta.env.VITE_ACCESSTOKEN_KEY,
+            newAccessToken,
+          );
+        if (newRefreshToken)
+          setLocalStorageValue(
+            import.meta.env.VITE_REFRESHTOKEN_KEY,
+            newRefreshToken,
+          );
 
         setUser(user);
         showSuccessMessage("you logged in successfully!");
@@ -80,10 +92,21 @@ export default function AuthProvider({ children }) {
       const response = await axiosInstance.post("/api/auth/register", formData);
 
       const user = response?.data?.user,
-        accessToken = response?.data?.accessToken;
+        newAccessToken = response?.data?.accessToken,
+        newRefreshToken = response?.data?.refreshToken;
 
       if (user) {
-        if (accessToken) setToken(accessToken);
+        if (newAccessToken)
+          setLocalStorageValue(
+            import.meta.env.VITE_ACCESSTOKEN_KEY,
+            newAccessToken,
+          );
+        if (newRefreshToken)
+          setLocalStorageValue(
+            import.meta.env.VITE_REFRESHTOKEN_KEY,
+            newRefreshToken,
+          );
+
         setUser(user);
         navigate("/dashboard");
         showSuccessMessage("account created successfully!");

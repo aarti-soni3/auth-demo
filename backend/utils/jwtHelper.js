@@ -10,6 +10,10 @@ module.exports.signAccessToken = (user) => {
 }
 
 module.exports.signRefreshToken = (user) => {
-    const token = jwt.sign({ id: user._id.toString(), username: user.username, role: user.role }, process.env.REFRESH_TOKEN)
+    const token = jwt.sign(
+        { id: user._id.toString(), username: user.username, role: user.role },
+        process.env.REFRESH_TOKEN,
+        { expiresIn: '30d' }
+    )
     return token
 }

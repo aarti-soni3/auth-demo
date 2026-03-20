@@ -1,7 +1,8 @@
-const UserSchema = require('../models/userSchema');
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
+const UserSchema = require('../models/userSchema');
 const { signAccessToken, signRefreshToken } = require('../utils/jwtHelper');
-
+const userSchema = require('../models/userSchema');
 module.exports.createUser = async (req, res) => {
     try {
         const { firstname, lastname, email, role, username, password } = req.body;
@@ -77,6 +78,35 @@ module.exports.loginUser = async (req, res) => {
 }
 
 module.exports.logoutUser = (req, res) => {
-    // removeTokenCookie(res);
     res.status(200).json({ type: 'success', message: 'Logged out successfully!' })
+}
+
+module.exports.refreshTokens = async (req, res) => {
+    const refreshToken = req.body.refreshToken
+
+    try {
+        if (refreshToken !== null) {
+            let user = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+            console.log('in refresh token : ', user)
+            user = await UserSchema.findById(user.id);
+            console.log(refreshToken, user)
+
+            if (user) {
+                const accessToken = signAccessToken(user)
+                const refreshToken = signRefreshToken(user)
+
+                return res.status(200).json({
+                    type: 'success',
+                    message: 'refresh Successfull!',
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                })
+            }
+            else {
+                return res.status(403).json({ type: 'error', message: 'Invalid creadentials' })
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ type: 'error', message: error.message })
+    }
 }
